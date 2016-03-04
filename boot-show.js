@@ -3,49 +3,45 @@ var fakeProjNames = [
 "BamBam",
 "Charlie",
 "Delta",
-"Shebamsplat"
+"Eskimo",
+"Fascination",
+"Gob",
+"Shebamsplat",
+"9",
+"Team up",
+"Hallejlujah"
 ]
 
-var rows = fakeProjNames.length;
-var columns = 2;
-var $row = $("<div />", {
-  class: "row"
-});
-var $square = $("<div />", {
-  class: "square"
-});
-var $projectBox = $("<div />", {
-  class: "project-name-box"
-})
+var updateRankingNumberInElementText = function(list){
+  for (var i=0; i<list.length; i++){
+    // debugger;
+    var element = list[i];
+    var sliceFrom = (element.innerText.indexOf("."));
+    var originalText = element.innerText.slice(sliceFrom);
+    var newText = (i+1) + originalText;
+    element.innerText = newText;
+  }
+}
 
 $(document).ready(function() {
-  for (var i=0; i < columns; i++) {
-    $row.append($square.clone());
-  }
-  for (var i=0; i<rows; i++){
-    $(".grid-wrapper").append($row.clone());
+  for (var i=0; i<fakeProjNames.length; i++){
+    $(".project-list").append('<li class=".project-list-element">' + (i+1) + '. ' + fakeProjNames[i] + '</li>');
   }
 
-  var rowsMade = $(".grid-wrapper").children(".row");
-  $.each(rowsMade, function( rowIndex, rowValue) {
-    var squares = $(rowValue).children(".square");
-    $.each(squares, function( squareIndex, squareValue) {
-      if (squareIndex === 0) {
-        $(this).text(rowIndex +1);
-      }
-      else if (squareIndex === 1) {
-        $(this).droppable();
-        $(this).append($projectBox.clone());
-        var projBox = $(this).children(".project-name-box");
-        $(projBox).text(fakeProjNames[rowIndex]);
-      }
-    })
-  })
+  $(".project-list").sortable({
+    connectWith: "ul",
+    update: function() {
+      var currentList = this.children;
+      updateRankingNumberInElementText(currentList);
 
-  $(".project-name-box").draggable({
-    revert: "invalid"
+    }
   });
-  // $(".project-name-box").draggable("enable");
+
+  $(".project-list-element").draggable({
+    revert:  "invalid",
+    connectToSortable: ".project-list"
+  });
+
 });
 
 
